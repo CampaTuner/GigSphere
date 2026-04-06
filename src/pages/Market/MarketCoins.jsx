@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { FaSearch } from 'react-icons/fa';
-import Input from '../components/common/Input';
-import Dropdown from '../components/common/Dropdown';
-import CoinRow from '../components/crypto/CoinRow';
+import Input from '../../components/common/Input';
+import Dropdown from '../../components/common/Dropdown';
+import CoinRow from '../../components/crypto/CoinRow';
 
-function MarketPlace() {
+function MarketCoins() {
     let url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=inr&order=market_cap_desc&per_page=20&page=1&sparkline=true&price_change_percentage=24h"
     const [limit, setLimit] = useState({ label: "20" });
     const [filters, setFilters] = useState({
@@ -131,4 +131,4 @@ function MarketPlace() {
     )
 }
 
-export default MarketPlace
+export default MarketCoins
