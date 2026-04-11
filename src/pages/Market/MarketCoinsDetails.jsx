@@ -16,10 +16,10 @@ function MarketCoinsDetails() {
 
 
     return (
-        <div className='bg-[#080808] py-10'>
+        <div className='bg-[#080808] space-y-10 py-10'>
 
-            <CoinDetails />
             <CoinChart />
+            <CoinDetails />
         </div>
     )
 }

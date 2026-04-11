@@ -1,13 +1,15 @@
-import React from 'react';
-import { Star, Info, Clock, TrendingUp, TrendingDown } from 'lucide-react'; // Optional icons
+import React, { useState } from 'react';
+import { Star, Info, Clock, TrendingUp, TrendingDown, ExternalLink, Wallet } from 'lucide-react'; // Optional icons
 
 function CoinDetails() {
+    const [isFavorite, setIsFavorite] = useState(true);
+    const [showFullDescription, setShowFullDescription] = useState(false);
     const coinData = {
         id: "bitcoin",
         name: "Bitcoin",
         symbol: "BTC",
         image: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png", // Official BTC logo
-        
+
         market_cap_rank: 1,
         watchlist_count: 2771773,
 
@@ -26,6 +28,8 @@ function CoinDetails() {
         isFavorite: true,
     };
 
+    const description = `Bitcoin is the first and most well-known cryptocurrency in the world. It was created in 2009 by an anonymous person or group of people using the pseudonym Satoshi Nakamoto. Bitcoin operates on a decentralized peer-to-peer network using blockchain technology, allowing secure transactions without the need for intermediaries like banks. It has a fixed supply cap of 21 million coins, making it a popular store of value often referred to as "digital gold."`;
+
     const formatNumber = (num) => {
         return new Intl.NumberFormat('en-US', {
             maximumFractionDigits: 0,
@@ -40,8 +44,17 @@ function CoinDetails() {
         }).format(price);
     };
 
+    const toggleWishlist = () => {
+        setIsFavorite(!isFavorite);
+        console.log(isFavorite ? "Removed from wishlist" : "Added to wishlist");
+    };
+
+    const handleBuyCoin = () => {
+        window.open('https://www.binance.com/en/trade/BTC_INR?layout=pro&theme=dark', '_blank');
+    };
+
     return (
-        <div className="bg-[#1a1a1a] text-white p-6 rounded-2xl max-w-6xl mx-auto font-sans">
+        <div className="bg-[#1a1a1a] mt-10 text-white px-10 py-6 rounded-2xl max-w-6xl mx-auto font-sans">
             {/* Header */}
             <div className="flex items-start justify-between mb-8">
                 <div className="flex items-center gap-4">
@@ -158,9 +171,61 @@ function CoinDetails() {
                 </div>
             </div>
 
+            {/* About Section with Read More */}
+            <div className="mb-10 mt-10">
+                <h2 className="text-2xl font-semibold mb-4">About Bitcoin</h2>
+                <div className="text-zinc-300 leading-relaxed text-[17px]">
+                    {showFullDescription
+                        ? description
+                        : description.substring(0, 320) + "..."
+                    }
+                </div>
+                <button
+                    onClick={() => setShowFullDescription(!showFullDescription)}
+                    className="text-blue-400 hover:text-blue-300 font-medium mt-4 flex items-center gap-1 transition"
+                >
+                    {showFullDescription ? "Read Less" : "Read More"}
+                </button>
+            </div>
+
+            {/* Official Website */}
+            <div className="flex items-center gap-3 text-zinc-400 hover:text-white transition">
+                <a
+                    href={coinData.official_website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 border border-zinc-700 hover:border-zinc-500 px-5 py-3 rounded-2xl"
+                >
+                    <ExternalLink className="w-5 h-5" />
+                    Official Website
+                </a>
+            </div>
+
             {/* Last Updated */}
             <div className="text-center text-zinc-500 text-xs mt-6">
                 Last updated: {new Date(coinData.last_updated).toLocaleString()}
+            </div>
+
+            <div className="fixed bottom-6 right-6 flex flex-col gap-3 z-50">
+                {/* Add to Wishlist */}
+                <button
+                    onClick={toggleWishlist}
+                    className="px-6 py-2.5 flex items-center gap-5 py-3 rounded-2xl text-sm font-medium transition-all bg-zinc-900 hover:bg-zinc-800 text-zinc-400"
+                >
+                    <Star className={`w-6 h-6 ${isFavorite ? "text-yellow-400 fill-yellow-400" : "text-zinc-400"}`} />
+                    <span className="font-medium pr-2">
+                        {isFavorite ? "In Wishlist" : "Add to Wishlist"}
+                    </span>
+                </button>
+
+                {/* Buy Coin */}
+                <button
+                    onClick={handleBuyCoin}
+                    className="px-6 py-2.5 flex items-center gap-5 py-3 rounded-2xl text-sm font-medium transition-all bg-blue-600 text-white"
+                >
+                    <Wallet className="w-6 h-6" />
+                    Buy Coin
+                </button>
             </div>
         </div>
     );

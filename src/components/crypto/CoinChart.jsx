@@ -1,60 +1,63 @@
 import React from "react";
 import {
   Chart as ChartJS,
-  LinearScale,
-  TimeScale,
-  Tooltip,
-  Legend,
-  CategoryScale, // fallback if needed
-} from "chart.js";
-
-import { Chart } from "react-chartjs-2";
-import {
-  CandlestickController,
-  CandlestickElement,
-} from "chartjs-chart-financial";
-
-import "chartjs-adapter-date-fns";
-
-// Register everything
-ChartJS.register(
-  TimeScale,
-  LinearScale,
+  LineElement,
   CategoryScale,
+  LinearScale,
+  PointElement,
   Tooltip,
-  Legend,
-  CandlestickController,
-  CandlestickElement
+  Filler,
+} from "chart.js";
+import { Line } from "react-chartjs-2";
+
+ChartJS.register(
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Tooltip,
+  Filler
 );
 
 function CoinChart() {
-  // Sample realistic BTC data for Feb 2026 (prices around $38k in screenshot, but you can replace with real data)
-  const candleData = [
-    { x: new Date("2026-02-05"), o: 38250, h: 38600, l: 37900, c: 38400 },
-    { x: new Date("2026-02-06"), o: 38400, h: 38550, l: 38100, c: 38280 },
-    { x: new Date("2026-02-07"), o: 38280, h: 38650, l: 38200, c: 38520 },
-    { x: new Date("2026-02-08"), o: 38520, h: 38600, l: 37950, c: 38100 },
-    { x: new Date("2026-02-09"), o: 38100, h: 38500, l: 38050, c: 38450 },
-    { x: new Date("2026-02-10"), o: 38450, h: 38680, l: 38300, c: 38580 },
-    { x: new Date("2026-02-11"), o: 38580, h: 38620, l: 38250, c: 38350 },
-    { x: new Date("2026-02-12"), o: 38350, h: 38400, l: 37800, c: 37950 },
-    { x: new Date("2026-02-13"), o: 37950, h: 38200, l: 37750, c: 38120 },
-    { x: new Date("2026-02-14"), o: 38120, h: 38700, l: 38050, c: 38650 },
-    { x: new Date("2026-02-15"), o: 38650, h: 38720, l: 38400, c: 38500 },
-    { x: new Date("2026-02-16"), o: 38500, h: 38600, l: 38250, c: 38380 },
+  const chartData = [
+    // ... your original data (kept same)
+    [1760400000000, 10216224.0518707],
+    [1760486400000, 10046351.0758258],
   ];
 
+  // Format dates for labels
+  const labels = chartData.map(([timestamp]) => {
+    const date = new Date(timestamp);
+    return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  });
+
+  const prices = chartData.map(([, price]) => price);
+
+  const currentPrice = prices[prices.length - 1];
+  const previousPrice = prices[prices.length - 2] || prices[0];
+  const change = ((currentPrice - previousPrice) / previousPrice) * 100;
+  const isPositive = change > 0;
+
   const data = {
+    labels,
     datasets: [
       {
-        label: "BTC/USD",
-        data: candleData,
-        borderColor: "#22C55E", // green for bullish
-        borderWidth: 1,
+        data: prices,
+        borderColor: isPositive ? "#22c55e" : "#ef4444",
+        borderWidth: 3,
+        tension: 0.4,
+        pointRadius: 0,
+        pointHoverRadius: 6,
+        pointBackgroundColor: "#fff",
+        pointBorderWidth: 2,
+        fill: true,
         backgroundColor: (context) => {
-          const { raw } = context.raw || {};
-          if (!raw) return "#22C55E";
-          return raw.o <= raw.c ? "#22C55E" : "#EF4444"; // green if close > open, red otherwise
+          const ctx = context.chart.ctx;
+          const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+          gradient.addColorStop(0, isPositive ? "rgba(34, 197, 94, 0.25)" : "rgba(239, 68, 68, 0.25)");
+          gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
+          return gradient;
         },
       },
     ],
@@ -63,117 +66,114 @@ function CoinChart() {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    interaction: {
+      intersect: false,
+      mode: "index",
+    },
     plugins: {
       legend: { display: false },
       tooltip: {
-        mode: "index",
-        intersect: false,
+        backgroundColor: "#1f2937",
+        titleColor: "#9ca3af",
+        bodyColor: "#fff",
+        padding: 12,
+        displayColors: false,
         callbacks: {
-          label: (context) => {
-            const { o, h, l, c } = context.raw;
-            return [
-              `Open: $${o.toLocaleString()}`,
-              `High: $${h.toLocaleString()}`,
-              `Low: $${l.toLocaleString()}`,
-              `Close: $${c.toLocaleString()}`,
-            ];
-          },
+          title: (tooltipItems) => tooltipItems[0].label,
+          label: (context) => ` $${context.parsed.y.toLocaleString()}`,
         },
       },
     },
     scales: {
       x: {
-        type: "time",
-        time: {
-          unit: "day",
-          displayFormats: {
-            day: "dd MMM",
-          },
-        },
-        grid: {
-          color: "#333",
-        },
-        ticks: {
-          color: "#888",
-        },
+        grid: { color: "#27272a", lineWidth: 0.5 },
+        ticks: { color: "#71717a", font: { size: 11 } },
       },
       y: {
-        position: "right",
-        grid: {
-          color: "#333",
-        },
+        grid: { color: "#27272a", lineWidth: 0.5 },
         ticks: {
-          color: "#888",
-          callback: (value) => "$" + value.toLocaleString(),
+          color: "#71717a",
+          font: { size: 11 },
+          callback: (value) => "$" + (value / 1000000).toFixed(1) + "M",
         },
       },
-    },
-    interaction: {
-      mode: "nearest",
-      axis: "x",
-      intersect: false,
     },
   };
 
   return (
-    <div className="bg-[#0f0f0f] text-white p-6 rounded-2xl border border-zinc-800">
+    <div className="bg-[#0f0f0f] max-w-6xl m-auto text-white p-6 rounded-3xl border border-zinc-800 shadow-xl">
+
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+      <div className="flex flex-col md:flex-row md:items-start justify-between mb-6 gap-4">
         <div>
-          <h2 className="text-2xl font-semibold">Bitcoin to USD Chart</h2>
-          <p className="text-zinc-500 text-sm mt-1">
-            Lorem Ipsum is simply dummy text of the printing.
-          </p>
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 bg-orange-500 rounded-full flex items-center justify-center text-xl font-bold">
+              ₿
+            </div>
+            <div>
+              <h2 className="text-3xl font-semibold">Bitcoin</h2>
+              <p className="text-zinc-500">BTC/USD</p>
+            </div>
+          </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="text-right">
+          <div className="text-4xl font-semibold tabular-nums">
+            ${currentPrice.toLocaleString()}
+          </div>
+          <div className={`text-lg flex items-center justify-end gap-1 ${isPositive ? "text-green-500" : "text-red-500"}`}>
+            {isPositive ? "↑" : "↓"} {Math.abs(change).toFixed(2)}% (24h)
+          </div>
+        </div>
+
+        <div className="md:ml-auto">
           <input
             type="text"
-            placeholder="Search Coin Name"
-            className="bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-blue-500 w-64"
+            placeholder="Search coins..."
+            className="bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-3 text-sm w-72 focus:outline-none focus:border-blue-500 transition"
           />
         </div>
       </div>
-
       {/* Tabs */}
-      <div className="flex gap-2 mb-6">
-        <button className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-xl text-sm font-medium transition">
-          Price
-        </button>
-        <button className="bg-zinc-800 hover:bg-zinc-700 px-6 py-2 rounded-xl text-sm font-medium transition">
-          Market Cap
-        </button>
-        <button className="bg-zinc-800 hover:bg-zinc-700 px-6 py-2 rounded-xl text-sm font-medium transition">
-          Trade View
-        </button>
+      <div className="flex gap-2 mb-6  border-b border-zinc-800 pb-3">
+        {["Price", "Market Cap", "Volume"].map((tab, i) => (
+          <button
+            key={i}
+            className={`px-6 py-2.5 rounded-2xl text-sm font-medium transition-all ${i === 0
+              ? "bg-blue-600 text-white "
+              : "bg-zinc-900 hover:bg-zinc-800 text-zinc-400"
+              }`}
+          >
+            {tab}
+          </button>
+        ))}
       </div>
 
-      {/* Timeframe & Tools */}
-      <div className="flex justify-end items-center gap-4 mb-4 text-sm">
-        <div className="flex items-center gap-2 bg-zinc-900 px-4 py-1 rounded-xl">
-          <span>24h</span>
-          <span className="text-zinc-500">▼</span>
+      {/* Timeframe */}
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex gap-2 text-sm">
+          {["1H", "24H", "7D", "30D", "90D", "1Y", "ALL"].map((t, i) => (
+            <button
+              key={i}
+              className={`px-4 py-1.5 rounded-xl transition ${i === 1 ? "bg-zinc-800 text-white" : "text-zinc-500 hover:text-zinc-300"}`}
+            >
+              {t}
+            </button>
+          ))}
         </div>
-        <div className="flex gap-3 text-zinc-400">
-          <button>📊</button>
-          <button>↗</button>
-          <button>⋯</button>
-        </div>
+
+
       </div>
 
-      {/* Chart Container */}
-      <div className="h-[420px] relative">
-        <Chart
-          type="candlestick"
-          data={data}
-          options={options}
-        />
+      {/* Chart */}
+      <div className="h-[420px] w-full">
+        <Line data={data} options={options} />
       </div>
 
       {/* Bottom Labels */}
-      <div className="flex justify-between text-xs text-zinc-500 mt-2 px-2">
-        <div>USD</div>
-        <div>BTC</div>
+      <div className="flex justify-between text-xs text-zinc-500 mt-3 px-2">
+        <div>Feb 2026</div>
+        <div>Mar 2026</div>
       </div>
     </div>
   );
