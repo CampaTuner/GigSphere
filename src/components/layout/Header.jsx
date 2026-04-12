@@ -1,6 +1,7 @@
 import React from 'react';
 import { icons } from '../../utils/constants';
 import { Link } from 'react-router-dom';
+import { NavLink } from "react-router-dom";
 
 function Header() {
     return (
@@ -8,20 +9,62 @@ function Header() {
             <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
 
                 {/* Logo */}
-                <div className="flex items-center gap-3">
-                    <img src={icons.logoYellow} alt="" className='w-10' />
-                    <div className="text-white font-semibold text-2xl tracking-tight">
+                <div className="flex items-center gap-2">
+                    <img   src={icons.logoYellow} alt="" className='w-10 cursor-pointer' />
+                    <div className="text-white font-semibold text-2xl cursor-pointer tracking-tight">
                         Gig Sphere
                     </div>
                 </div>
 
-                {/* Navigation */}
-                <nav className="hidden md:flex items-center gap-8">
-                    <Link to="/" className="text-blue-400 font-medium border-b-2 border-blue-400 pb-1">Market</Link>
-                    <a href="#" className="text-gray-300 hover:text-white transition-colors">Watchlist</a>
-                    <a href="#" className="text-gray-300 hover:text-white transition-colors">Portfolio</a>
-                    <a href="#" className="text-gray-300 hover:text-white transition-colors">Learn</a>
-                </nav>
+                
+
+<nav className="hidden md:flex items-center gap-8">
+  
+  <NavLink 
+    to="/" 
+    className={({ isActive }) =>
+      isActive
+        ? "text-blue-500 font-medium pb-1"
+        : "text-gray-300 font-medium pb-1 hover:text-blue-500"
+    }
+  >
+    Market
+  </NavLink>
+
+  <NavLink 
+    to="/watchlist" 
+    className={({ isActive }) =>
+      isActive
+        ? "text-blue-500"
+        : "text-gray-300 hover:text-blue-500"
+    }
+  >
+    Watchlist
+  </NavLink>
+
+  <NavLink 
+    to="/portfolio" 
+    className={({ isActive }) =>
+      isActive
+        ? "text-blue-500"
+        : "text-gray-300 hover:text-blue-500"
+    }
+  >
+    Portfolio
+  </NavLink>
+
+  <NavLink 
+    to="/learn" 
+    className={({ isActive }) =>
+      isActive
+        ? "text-blue-500"
+        : "text-gray-300 hover:text-blue-500"
+    }
+  >
+    Learn
+  </NavLink>
+
+</nav>
 
                 {/* Right Side */}
                 <div className="flex items-center gap-4">
@@ -33,16 +76,16 @@ function Header() {
                             alt="Currency dropdown"
                             className="w-3 h-3"
                         />
-                    </div>
+                    </div> 
 
                     <Link to="/sign-in">
-                        <button className="text-white px-6 py-2 hover:bg-gray-800 rounded-lg transition-colors font-medium">
+                        <button className="text-white px-6 py-2 hover:bg-blue-700 rounded-lg transition-colors font-medium">
                             Sign in
                         </button>
                     </Link>
 
                     <Link to="/sign-up">
-                        <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                        <button className=" hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
                             Sign up
                         </button>
                     </Link>

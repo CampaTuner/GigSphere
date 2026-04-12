@@ -104,7 +104,7 @@ function CoinChart() {
     <div className="bg-[#0f0f0f] max-w-6xl m-auto text-white p-6 rounded-3xl border border-zinc-800 shadow-xl">
 
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-start justify-between mb-6 gap-4">
+      <div className="flex flex-col md:flex-row md:items-start mb-6 gap-4">
         <div>
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 bg-orange-500 rounded-full flex items-center justify-center text-xl font-bold">
@@ -118,7 +118,7 @@ function CoinChart() {
         </div>
 
         <div className="text-right">
-          <div className="text-4xl font-semibold tabular-nums">
+          <div className="text-4xl font-semibold w-fit content tabular-nums">
             ${currentPrice.toLocaleString()}
           </div>
           <div className={`text-lg flex items-center justify-end gap-1 ${isPositive ? "text-green-500" : "text-red-500"}`}>
@@ -126,13 +126,7 @@ function CoinChart() {
           </div>
         </div>
 
-        <div className="md:ml-auto">
-          <input
-            type="text"
-            placeholder="Search coins..."
-            className="bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-3 text-sm w-72 focus:outline-none focus:border-blue-500 transition"
-          />
-        </div>
+        
       </div>
       {/* Tabs */}
       <div className="flex gap-2 mb-6  border-b border-zinc-800 pb-3">
