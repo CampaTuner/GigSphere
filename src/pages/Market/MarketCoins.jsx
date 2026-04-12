@@ -34,8 +34,8 @@ function MarketCoins() {
                 <div class="p-6 border-b border-zinc-800">
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div>
-                            <h1 class="text-2xl font-bold">Market Coins</h1>
-                            <p class="text-zinc-400 text-sm mt-1">Lorem Ipsum is simply dummy text of the printing.</p>
+                            <h1 class="text-2xl font-bold ">Market Coins</h1>
+                            <p class="text-zinc-400 text-[15px] mt-2">Here you can find live market coins and their price with market up & down in 24 hours and also their graphs.</p>
                         </div>
 
                         {/* <!-- Search & Filter --> */}
@@ -51,7 +51,7 @@ function MarketCoins() {
                 <div class="px-6 py-4 border-b border-zinc-800 flex items-center gap-3 flex-wrap">
                     <Dropdown
                         placeholder="Category"
-                        variant="primary"
+                        variant="dark"
                         onSelect={(val) => setFilters({ ...filters, category: val })}
                         options={[
                             { label: "Crypto" },

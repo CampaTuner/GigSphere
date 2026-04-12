@@ -33,9 +33,10 @@ const Dropdown = ({
     const selectedValue = value || selected;
 
     const variants = {
-        primary: "bg-blue-600 text-white hover:bg-blue-700",
-        dark: "bg-zinc-800 text-white hover:bg-zinc-700",
-        outline: "border border-zinc-600 text-zinc-300 hover:bg-zinc-800",
+        primary: "bg-blue-800 text-white hover:bg-blue-700",
+        dark: "bg-zinc-800 text-white hover:bg-blue-700",
+        outline: "border border-zinc-600 text-zinc-300 hover:bg-blue-700",
+        Selected:"bg-blue-700"
     };
 
     const sizes = {
