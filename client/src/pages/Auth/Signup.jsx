@@ -1,7 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 
 function Signup() {
+
+    let toast_settings = {
+        style: {
+            borderRadius: '10px',
+            background: '#333',
+            color: '#fff',
+        },
+    }
+
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
@@ -18,17 +28,16 @@ function Signup() {
         });
     };
 
-    useEffect(() => {
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
-    }, [])
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (formData.password !== formData.confirmPassword) {
-            alert("Passwords do not match!");
+            toast.error("Passwords do not match!", toast_settings);
+            return;
+        }
+
+        if (!formData.fullName || !formData.email || !formData.password || !formData.confirmPassword) {
+            toast.error("All fields are required", toast_settings)
             return;
         }
         // Add your signup logic here
@@ -57,7 +66,6 @@ function Signup() {
                                 value={formData.fullName}
                                 onChange={handleChange}
                                 placeholder="John Doe"
-                                required
                                 className="w-full bg-[#1A1A1A] border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 transition-colors"
                             />
                         </div>
@@ -71,7 +79,6 @@ function Signup() {
                                 value={formData.email}
                                 onChange={handleChange}
                                 placeholder="you@example.com"
-                                required
                                 className="w-full bg-[#1A1A1A] border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 transition-colors"
                             />
                         </div>
@@ -86,7 +93,7 @@ function Signup() {
                                     value={formData.password}
                                     onChange={handleChange}
                                     placeholder="Create a strong password"
-                                    required
+
                                     className="w-full bg-[#1A1A1A] border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 transition-colors"
                                 />
                                 <button
@@ -109,7 +116,7 @@ function Signup() {
                                     value={formData.confirmPassword}
                                     onChange={handleChange}
                                     placeholder="Confirm your password"
-                                    required
+
                                     className="w-full bg-[#1A1A1A] border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 transition-colors"
                                 />
                                 <button
@@ -127,7 +134,7 @@ function Signup() {
                             <input
                                 type="checkbox"
                                 id="terms"
-                                required
+
                                 className="mt-1 w-4 h-4 accent-orange-500 bg-[#1A1A1A] border-gray-700 rounded"
                             />
                             <label htmlFor="terms" className="text-sm text-gray-400">

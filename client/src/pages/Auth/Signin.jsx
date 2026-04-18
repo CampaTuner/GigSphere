@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
@@ -12,14 +13,19 @@ function Signin() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Add your sign-in logic here
+
+        if (!data.email || !data.password)
+            return toast.error("All Fields are required", {
+                style: {
+                    borderRadius: '10px',
+                    background: '#333',
+                    color: '#fff',
+                },
+            })
+
         console.log('Sign in attempt:', { email, password });
     };
 
-
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, [])
 
 
 
@@ -46,7 +52,6 @@ function Signin() {
                                 value={data.email}
                                 onChange={(e) => setData({ ...data, email: e.target.value })}
                                 placeholder="you@example.com"
-                                required
                                 className="w-full bg-[#1A1A1A] border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 transition-colors"
                             />
                         </div>
@@ -60,7 +65,6 @@ function Signin() {
                                     value={data.password}
                                     onChange={(e) => setData({ ...data, password: e.target.value })}
                                     placeholder="••••••••"
-                                    required
                                     className="w-full bg-[#1A1A1A] border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 transition-colors"
                                 />
                                 <button

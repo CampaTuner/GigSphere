@@ -3,7 +3,7 @@ import Header from './components/layout/Header'
 import Footer from './components/layout/Footer'
 import { Route, Routes, useLocation, useParams } from 'react-router-dom'
 import { MarketCoinsDetails, MarketCoins, Signin, Signup } from './pages'
-import ScrollToTop from '../src/utils/scrollToTop'
+import ScrollToTop from './utils/scrollToTop'
 
 function App() {
 
