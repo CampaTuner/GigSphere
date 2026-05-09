@@ -1,7 +1,10 @@
-from django.http import HttpResponse
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
+
+# @login_required(login_url='signin')
 def Home(request):
-    return HttpResponse("Hello, World!")
+    return render(request, 'home.html')
 
 def About(request):
     return HttpResponse("This is the about page.")

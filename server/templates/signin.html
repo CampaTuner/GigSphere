@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1 class="text-white">Sign in</h1>
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" placeholder="Username or Email" name="username-or-email">
+        <input type="password" placeholder="Password" name="password">
+        <button type="submit">Sign in</button>
+        <br>
+        <a href={% url 'signup' %}>Don't have an account? Sign up</a>
+        <br>
+        <a href={% url 'forget_password' %}>Forget Password</a>
+    </form>
+    {% if messages %}
+        {% for message in messages %}
+        <p style="color: {% if message.tags == 'error' %}red{% elif message.tags == 'success' %}green{% else %}blue{% endif %};">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+</body>
+</html>

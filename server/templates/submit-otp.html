@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Submit OTP</h1>
+    <form method="post" action="{% url 'verify_otp' %}">
+        {% csrf_token %}
+        <input type="text" placeholder="Email" name="email" value="{{email}}" readonly>
+        <input type="text" placeholder="Username" name="username" value="{{username}}" readonly>
+        <input type="text" placeholder="Password" name="password" value="{{password}}" readonly>
+        <input type="text" placeholder="OTP" name="otp">
+        <button type="submit">Verify OTP</button>
+    </form>
+    {% if messages %}
+        {% for message in messages %}
+        <p style="color: {% if message.tags == 'error' %}red{% elif message.tags == 'success' %}green{% else %}blue{% endif %};">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+</body>
+</html>

@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'accounts'
+    'accounts',
+    'user_management'
 ]
 
 MIDDLEWARE = [
@@ -55,7 +56,7 @@ ROOT_URLCONF = 'gigsphere.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -121,3 +122,11 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' # backend
+EMAIL_HOST = 'smtp.gmail.com' # yahoo, icloud, outlook, aol
+EMAIL_PORT = 587 # smtp port
+EMAIL_USE_TLS = True # secure connection
+EMAIL_HOST_USER = 'rounakbasak12@gmail.com' #sender
+EMAIL_HOST_PASSWORD = 'zxkr bytd zqrb vrev'  # app password
