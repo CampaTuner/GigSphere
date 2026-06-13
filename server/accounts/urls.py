@@ -1,12 +1,12 @@
 from django.contrib import admin
 from django.urls import path
-from . import views
+from .views import RegisterView, VerifyOTPView, LoginView, UserProfileView
+from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
-    path('send-otp/', views.Send_Otp, name='send_otp'),
-    path('verify-otp/', views.Verify_Otp, name='verify_otp'),
-    path('signup/', views.Sign_Up, name='signup'),
-    path('signin/', views.Sign_In, name='signin'),
-    path('forget-password/', views.Forget_Password, name='forget_password'),
-    path('logout/', views.Logout, name='logout'),
+   path('register/', RegisterView.as_view(), name='register'),
+   path('verify-otp/', VerifyOTPView.as_view(), name='verify_otp'),
+   path('login/', LoginView.as_view(), name='login'),
+   path('profile/', UserProfileView.as_view(), name='profile'),
+   path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

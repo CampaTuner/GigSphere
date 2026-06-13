@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import useAuth from '../../hooks/useAuth';
 
 function Signin() {
     const [data, setData] = useState({
         email: '',
         password: ''
     })
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+
+
+
 
     const [showPassword, setShowPassword] = useState(false)
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!data.email || !data.password)
@@ -23,11 +29,15 @@ function Signin() {
                 },
             })
 
-        console.log('Sign in attempt:', { email, password });
+        let { login } = useAuth()
+        setLoading(true)
+        let isLoggedin = await login(data);
+        setLoading(false)
+        if (isLoggedin)
+            navigate("/")
+
+
     };
-
-
-
 
 
     return (
@@ -87,9 +97,10 @@ function Signin() {
                         {/* Sign In Button */}
                         <button
                             type="submit"
-                            className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3.5 rounded-xl transition-colors text-lg"
+                            className={`w-full  text-white font-semibold py-3.5 rounded-xl transition-colors text-lg ${loading ? 'bg-orange-500/50 cursor-not-allowed' : 'bg-orange-500 hover:bg-orange-600'}`}
+                            disabled={loading}
                         >
-                            Sign In
+                            {loading ? 'Signing In...' : 'Sign In'}
                         </button>
                     </form>
 

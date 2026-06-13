@@ -4,14 +4,14 @@ import { Link } from 'react-router-dom';
 import { NavLink } from "react-router-dom";
 import { Lock } from 'lucide-react';
 
-function Header() {
+function Header({ isAuthenticate, setIsAuthenticate }) {
 
   let urls = [
     { name: 'Market', path: '/' },
     { name: 'Watchlist', path: '/watchlist' },
     { name: 'Portfolio', path: '/portfolio' },
     { name: 'News', path: '/news' },
-    { name: 'premium', path: '/premium', icons: <Lock  size={16}/>, color: 'text-[#F7931A]' },
+    { name: 'premium', path: '/premium', icons: <Lock size={16} />, color: 'text-[#F7931A]' },
   ]
 
   return (
@@ -67,17 +67,22 @@ function Header() {
             />
           </div>
 
-          <Link to="/sign-in">
-            <button className="text-white px-6 py-2 hover:bg-blue-700 rounded-lg transition-colors font-medium">
-              Sign in
-            </button>
-          </Link>
+          {
+            !isAuthenticate &&
+            <>
+              <Link to="/sign-in">
+                <button className="text-white px-6 py-2 hover:bg-blue-700 rounded-lg transition-colors font-medium">
+                  Sign in
+                </button>
+              </Link>
 
-          <Link to="/sign-up">
-            <button className=" hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
-              Sign up
-            </button>
-          </Link>
+              <Link to="/sign-up">
+                <button className=" hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                  Sign up
+                </button>
+              </Link>
+            </>
+          }
         </div>
       </div>
     </header>

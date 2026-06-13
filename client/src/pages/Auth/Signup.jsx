@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import useAuth from '../../hooks/useAuth';
+import OTPModal from '../../features/auth/OTPModal';
 
 function Signup() {
 
@@ -13,13 +15,14 @@ function Signup() {
     }
 
     const [formData, setFormData] = useState({
-        fullName: '',
+        username: '',
         email: '',
+        phone: '',
         password: '',
-        confirmPassword: '',
     });
     const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [isOTPModalOpen, setIsOTPModalOpen] = useState(false);
+    const navigate = useNavigate()
 
     const handleChange = (e) => {
         setFormData({
@@ -29,20 +32,39 @@ function Signup() {
     };
 
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (formData.password !== formData.confirmPassword) {
-            toast.error("Passwords do not match!", toast_settings);
-            return;
-        }
 
-        if (!formData.fullName || !formData.email || !formData.password || !formData.confirmPassword) {
-            toast.error("All fields are required", toast_settings)
+        if (!formData.username || !formData.email || !formData.password || !formData.phone) {
+            toast.error("All fields are required")
             return;
         }
         // Add your signup logic here
-        console.log('Sign up attempt:', formData);
+        let { register } = useAuth()
+
+        let isValid = await register(formData);
+        if (isValid) {
+            setIsOTPModalOpen(true)
+        }
     };
+
+    const verifyOTP = async (email, otp) => {
+        let { verifyOTP } = useAuth()
+        let isVerified = await verifyOTP({ email, otp })
+        if (isVerified) {
+            setIsOTPModalOpen(false)
+            navigate("/sign-in")
+        }
+        else {
+            toast.error("Invalid OTP")
+        }
+
+
+    }
+
+    const resendOTP = async (email) => {
+        toast.error("Resend OTP function under development")
+    }
 
     return (
         <div className="min-h-screen py-10 bg-[#0A0A0A] flex items-center justify-center px-4">
@@ -57,15 +79,15 @@ function Signup() {
                     </p>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
-                        {/* Full Name */}
+                        {/* Username */}
                         <div>
-                            <label className="block text-sm text-gray-400 mb-1.5">Full Name</label>
+                            <label className="block text-sm text-gray-400 mb-1.5">Username</label>
                             <input
                                 type="text"
-                                name="fullName"
-                                value={formData.fullName}
+                                name="username"
+                                value={formData.username}
                                 onChange={handleChange}
-                                placeholder="John Doe"
+                                placeholder="johndoe12"
                                 className="w-full bg-[#1A1A1A] border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 transition-colors"
                             />
                         </div>
@@ -79,6 +101,19 @@ function Signup() {
                                 value={formData.email}
                                 onChange={handleChange}
                                 placeholder="you@example.com"
+                                className="w-full bg-[#1A1A1A] border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 transition-colors"
+                            />
+                        </div>
+
+                        {/* Phone Number */}
+                        <div>
+                            <label className="block text-sm text-gray-400 mb-1.5">Phone Number</label>
+                            <input
+                                type="text"
+                                name="phone"
+                                value={formData.phone}
+                                onChange={handleChange}
+                                placeholder="+91 1234567890"
                                 className="w-full bg-[#1A1A1A] border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 transition-colors"
                             />
                         </div>
@@ -106,28 +141,7 @@ function Signup() {
                             </div>
                         </div>
 
-                        {/* Confirm Password */}
-                        <div>
-                            <label className="block text-sm text-gray-400 mb-1.5">Confirm Password</label>
-                            <div className="relative">
-                                <input
-                                    type={showConfirmPassword ? "text" : "password"}
-                                    name="confirmPassword"
-                                    value={formData.confirmPassword}
-                                    onChange={handleChange}
-                                    placeholder="Confirm your password"
 
-                                    className="w-full bg-[#1A1A1A] border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 transition-colors"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white text-sm"
-                                >
-                                    {showConfirmPassword ? "Hide" : "Show"}
-                                </button>
-                            </div>
-                        </div>
 
                         {/* Terms & Conditions */}
                         <div className="flex items-start gap-3">
@@ -176,6 +190,8 @@ function Signup() {
                     © 2026 Gig Sphere. All rights reserved.
                 </p>
             </div>
+
+            <OTPModal isOpen={isOTPModalOpen} email={formData.email} onClose={() => setIsOTPModalOpen(false)} onVerify={verifyOTP} onResend={resendOTP} />
         </div>
     );
 }

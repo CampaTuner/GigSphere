@@ -8,6 +8,8 @@ import ScrollToTop from './utils/scrollToTop'
 function App() {
 
   let { pathname } = useLocation()
+  let [isAuthenticate, setIsAuthenticate] = useState(false)
+
 
   useEffect(() => {
     window.scrollTo({
@@ -18,7 +20,7 @@ function App() {
 
   return (
     <div className=''>
-      <Header />
+      <Header isAuthenticate={isAuthenticate} setIsAuthenticate={setIsAuthenticate} />
       <Routes>
         <Route path='/' element={<MarketCoins />} />
         <Route path='/marketplace' element={<MarketCoins />} />
