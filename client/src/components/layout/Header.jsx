@@ -1,10 +1,23 @@
 import React from 'react';
 import { icons } from '../../utils/constants';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { NavLink } from "react-router-dom";
 import { Lock } from 'lucide-react';
+import { useSelector } from "react-redux";
+import useAuth from '../../hooks/useAuth';
 
-function Header({ isAuthenticate, setIsAuthenticate }) {
+function Header() {
+
+  let user = useSelector((state) => state.auth)
+  let { logout } = useAuth()
+  let navigate = useNavigate()
+
+  let handleLogout = () => {
+    logout()
+    navigate("/sign-in")
+  }
+
+
 
   let urls = [
     { name: 'Market', path: '/' },
@@ -53,6 +66,13 @@ function Header({ isAuthenticate, setIsAuthenticate }) {
           }
 
 
+
+          {
+            user.role == "admin" && (
+              <NavLink to="/admin" className="text-gray-300 hover:text-blue-500">Dashboard</NavLink>
+            )
+          }
+
         </nav>
 
         {/* Right Side */}
@@ -68,20 +88,33 @@ function Header({ isAuthenticate, setIsAuthenticate }) {
           </div>
 
           {
-            !isAuthenticate &&
-            <>
-              <Link to="/sign-in">
-                <button className="text-white px-6 py-2 hover:bg-blue-700 rounded-lg transition-colors font-medium">
-                  Sign in
-                </button>
-              </Link>
+            !user.isAuthenticate ?
+              <>
+                <Link to="/sign-in">
+                  <button className="text-white px-6 py-2 hover:bg-blue-700 rounded-lg transition-colors font-medium">
+                    Sign in
+                  </button>
+                </Link>
 
-              <Link to="/sign-up">
-                <button className=" hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
-                  Sign up
+                <Link to="/sign-up">
+                  <button className=" hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                    Sign up
+                  </button>
+                </Link>
+              </>
+              : <div className='flex items-center gap-4'>
+                <p className="text-gray-400">{user.username}
+                  <span className={`${user.role == "admin" ? "text-red-500" : "text-green-500"
+                    }`}>({user.role.toUpperCase()})</span>
+
+
+                </p>
+                <button
+                  onClick={handleLogout}
+                  className=" hover:bg-red-700 text-red-400 hover:text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                  Logout
                 </button>
-              </Link>
-            </>
+              </div>
           }
         </div>
       </div>

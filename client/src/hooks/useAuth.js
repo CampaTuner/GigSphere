@@ -1,9 +1,13 @@
 import toast from "react-hot-toast"
 import { loginUser, registerUser, verifyOTPUser } from "../services/authService"
+import { useDispatch } from "react-redux"
+import { setUser, unSetUser } from "../store/slicers/authSlice"
 
 
 
 const useAuth = () => {
+
+    let dispatch = useDispatch()
 
     const register = async (data) => {
         try {
@@ -28,12 +32,30 @@ const useAuth = () => {
     }
 
     const login = async (data) => {
+
         try {
             const res = await loginUser(data)
-            console.log(res)
+
+
+            dispatch(setUser({
+                id: res.data.id,
+                username: res.data.username,
+                email: res.data.email,
+                role: res.data.role,
+                phone: res.data.phone,
+                avatar: res.data.avatar,
+                banner: res.data.banner,
+                subscription: res.data.subscription,
+                tokens: {
+                    access: res.data.access,
+                    refresh: res.data.refresh
+                },
+                isAuthenticate: true
+            }))
 
             localStorage.setItem("access", res.data.access)
             localStorage.setItem("refresh", res.data.refresh)
+
 
             toast.success(res.message)
             return true
@@ -49,6 +71,10 @@ const useAuth = () => {
     }
 
     const logout = async () => {
+        dispatch(unSetUser())
+        localStorage.setItem("access", null)
+        localStorage.setItem("refresh", null)
+        toast.success("Logout")
 
     }
 

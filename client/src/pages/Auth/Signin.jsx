@@ -11,7 +11,7 @@ function Signin() {
     })
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-
+    let { login } = useAuth()
 
 
 
@@ -29,14 +29,12 @@ function Signin() {
                 },
             })
 
-        let { login } = useAuth()
+
         setLoading(true)
         let isLoggedin = await login(data);
         setLoading(false)
         if (isLoggedin)
             navigate("/")
-
-
     };
 
 

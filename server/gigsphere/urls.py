@@ -12,4 +12,6 @@ urlpatterns = [
     path('contact/', views.Contact, name='contact'),
     path('api/auth/', include('accounts.urls')),
     path('api/news/', include('news.urls')),
+    path('api/watchlist/', include('crypto.urls')),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
