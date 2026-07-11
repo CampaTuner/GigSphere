@@ -1,34 +1,34 @@
 import React, { useState } from 'react';
 import { Star, Info, Clock, TrendingUp, TrendingDown, ExternalLink, Wallet } from 'lucide-react'; // Optional icons
 
-function CoinDetails() {
+function CoinDetails({ coin_data }) {
     const [isFavorite, setIsFavorite] = useState(true);
     const [showFullDescription, setShowFullDescription] = useState(false);
     const coinData = {
-        id: "bitcoin",
-        name: "Bitcoin",
-        symbol: "BTC",
-        image: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png", // Official BTC logo
+        id: coin_data?.id,
+        name: coin_data?.name,
+        symbol: coin_data?.symbol,
+        image: coin_data?.image.large,
 
-        market_cap_rank: 1,
-        watchlist_count: 2771773,
+        market_cap_rank: coin_data?.market_cap_rank,
+        watchlist_count: coin_data?.watchlist_count,
 
-        current_price: 43975.72,
-        price_change_percentage_24h: 2,
+        current_price: coin_data?.market_data.current_price.inr,
+        price_change_percentage_24h: coin_data?.market_data.price_change_percentage_24h,
 
-        high_24h: 237005.19,   // Note: In image low & high seem swapped in label
-        low_24h: 37005.19,
+        high_24h: coin_data?.market_data.high_24h.inr,
+        low_24h: coin_data?.market_data.low_24h.inr,
 
-        market_cap: 826445951378,
-        fully_diluted_valuation: 915435574336,
-        total_volume: 22822762169,
-        circulating_supply: 18958437,
-        max_supply: 21000000,
-        last_updated: "2026-04-06T12:00:00Z",
+        market_cap: coin_data?.market_cap,
+        fully_diluted_valuation: coin_data?.fully_diluted_valuation,
+        total_volume: coin_data?.total_volume,
+        circulating_supply: coin_data?.circulating_supply,
+        max_supply: coin_data?.max_supply,
+        last_updated: coin_data?.last_updated,
         isFavorite: true,
     };
 
-    const description = `Bitcoin is the first and most well-known cryptocurrency in the world. It was created in 2009 by an anonymous person or group of people using the pseudonym Satoshi Nakamoto. Bitcoin operates on a decentralized peer-to-peer network using blockchain technology, allowing secure transactions without the need for intermediaries like banks. It has a fixed supply cap of 21 million coins, making it a popular store of value often referred to as "digital gold."`;
+    const description = coin_data.description
 
     const formatNumber = (num) => {
         return new Intl.NumberFormat('en-US', {
@@ -173,12 +173,9 @@ function CoinDetails() {
 
             {/* About Section with Read More */}
             <div className="mb-10 mt-10">
-                <h2 className="text-2xl font-semibold mb-4">About Bitcoin</h2>
+                <h2 className="text-2xl font-semibold mb-4">About {coinData.name}</h2>
                 <div className="text-zinc-300 leading-relaxed text-[17px]">
-                    {showFullDescription
-                        ? description
-                        : description.substring(0, 320) + "..."
-                    }
+
                 </div>
                 <button
                     onClick={() => setShowFullDescription(!showFullDescription)}

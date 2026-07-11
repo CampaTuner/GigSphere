@@ -18,7 +18,7 @@ ChartJS.register(
     Tooltip
 );
 
-function CoinRow({ id, icon, name, code, price, chartData = [] }) {
+function CoinRow({ id, idx, icon, name, code, price, chartData = [] }) {
 
     // 🔥 Convert simple array → chart format
     const data = {
@@ -51,13 +51,13 @@ function CoinRow({ id, icon, name, code, price, chartData = [] }) {
     };
 
     return (
-        <Link to={`/coin/${name?.toLowerCase()}`}>
+        <Link to={`/coin/${id?.toLowerCase()}`}>
             <div className="grid grid-cols-14 gap-4 px-6 py-5 items-center hover:bg-zinc-800/50 transition border-b border-zinc-800">
 
                 {/* ID */}
                 <div className="col-span-1 flex items-center gap-3">
                     <i className="fa-regular fa-star text-amber-400"></i>
-                    <span className="text-zinc-400">{id}</span>
+                    <span className="text-zinc-400">{idx}</span>
                 </div>
 
                 {/* Coin Info */}

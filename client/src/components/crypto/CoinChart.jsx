@@ -19,23 +19,21 @@ ChartJS.register(
   Filler
 );
 
-function CoinChart() {
-  const chartData = [
-    // ... your original data (kept same)
-    [1760400000000, 10216224.0518707],
-    [1760486400000, 10046351.0758258],
-  ];
+function CoinChart({ chart_prices, coin_data }) {
+  const chartData = chart_prices;
 
   // Format dates for labels
-  const labels = chartData.map(([timestamp]) => {
+  const labels = chartData.map(([timestamp, _]) => {
     const date = new Date(timestamp);
     return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
   });
 
-  const prices = chartData.map(([, price]) => price);
+  const prices = chartData.map(([_, price]) => price);
 
-  const currentPrice = prices[prices.length - 1];
-  const previousPrice = prices[prices.length - 2] || prices[0];
+  console.log(coin_data)
+
+  const currentPrice = coin_data?.market_data?.current_price?.usd;
+  const previousPrice = coin_data?.market_data?.price_change_percentage_24h;
   const change = ((currentPrice - previousPrice) / previousPrice) * 100;
   const isPositive = change > 0;
 
@@ -80,7 +78,7 @@ function CoinChart() {
         displayColors: false,
         callbacks: {
           title: (tooltipItems) => tooltipItems[0].label,
-          label: (context) => ` $${context.parsed.y.toLocaleString()}`,
+          label: (context) => ` $${context.parsed.y?.toLocaleString()}`,
         },
       },
     },
@@ -107,26 +105,24 @@ function CoinChart() {
       <div className="flex flex-col md:flex-row md:items-start mb-6 gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-orange-500 rounded-full flex items-center justify-center text-xl font-bold">
-              ₿
-            </div>
+            <img src={coin_data?.image?.large} alt="" className="w-10 h-10 rounded-full" />
             <div>
-              <h2 className="text-3xl font-semibold">Bitcoin</h2>
-              <p className="text-zinc-500">BTC/USD</p>
+              <h2 className="text-3xl font-semibold">{coin_data?.name}</h2>
+              <p className="text-zinc-500">{coin_data?.symbol}/USD</p>
             </div>
           </div>
         </div>
 
         <div className="text-right">
           <div className="text-4xl font-semibold w-fit content tabular-nums">
-            ${currentPrice.toLocaleString()}
+            ${currentPrice?.toLocaleString()}
           </div>
           <div className={`text-lg flex items-center justify-end gap-1 ${isPositive ? "text-green-500" : "text-red-500"}`}>
-            {isPositive ? "↑" : "↓"} {Math.abs(change).toFixed(2)}% (24h)
+            {isPositive ? "↑" : "↓"} {Math.abs(change)?.toFixed(2)}% (24h)
           </div>
         </div>
 
-        
+
       </div>
       {/* Tabs */}
       <div className="flex gap-2 mb-6  border-b border-zinc-800 pb-3">

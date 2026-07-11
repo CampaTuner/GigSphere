@@ -121,7 +121,7 @@ function MarketCoins() {
                 {/* <!-- Bitcoin Row --> */}
                 {
                     coins.length > 0 &&
-                    coins?.map((coin, idx) => <CoinRow key={idx} chartData={coin.sparkline_in_7d.price} id={idx + 1} icon={coin.image} name={coin.name} code={coin.symbol} price={coin.current_price} />)
+                    coins?.map((coin, idx) => <CoinRow key={idx} idx={idx + 1} chartData={coin.sparkline_in_7d.price} id={coin.id} icon={coin.image} name={coin.name} code={coin.symbol} price={coin.current_price} />)
                 }
 
 
